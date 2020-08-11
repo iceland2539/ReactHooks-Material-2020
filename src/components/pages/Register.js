@@ -6,7 +6,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-
+import { Formik } from "formik";
+import { JsonWebTokenError } from "jsonwebtoken";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
@@ -27,6 +28,60 @@ export default function Login(props) {
     setAccount({ ...account, [e.target.name]: e.target.value });
   };
 
+  function showForm({
+    values,
+    handleChange,
+    handleSubmit,
+    setFieldValue,
+    isSubmitting,
+  }) {
+    return (
+      <form className={classes.root} noValidate onSubmit={handleSubmit}>
+        <TextField
+          id="username"
+          label="username"
+          variant="outlined"
+          name="username"
+          margin="normal"
+          value={values.username}
+          onChange={handleChange}
+          fullWidth
+        />
+        <TextField
+          id="password"
+          label="password"
+          variant="outlined"
+          name="password"
+          value={values.password}
+          onChange={handleChange}
+          margin="normal"
+          fullWidth
+        />
+
+        <Button
+          type="submit"
+          variant="contained"
+          color="primary"
+          fullWidth
+          className={classes.submit}
+          disabled={isSubmitting}
+        >
+          Register
+        </Button>
+
+        <Button
+          onClick={() => {
+            props.history.push("/login");
+          }}
+          color="primary"
+          fullWidth
+        >
+          Cancle
+        </Button>
+      </form>
+    );
+  }
+
   return (
     <Card className={classes.root}>
       <CardMedia
@@ -38,52 +93,15 @@ export default function Login(props) {
         <Typography gutterBottom variant="h5" component="h2">
           Register
         </Typography>
-        <form className={classes.root} noValidate autoComplete="off">
-          <TextField
-            id="outlined-basic"
-            label="username"
-            variant="outlined"
-            name="username"
-            margin="normal"
-            value={account.username}
-            onChange={HanderChange}
-            fullWidth
-          />
-          <TextField
-            id="outlined-basic"
-            label="password"
-            variant="outlined"
-            name="password"
-            value={account.password}
-            onChange={HanderChange}
-            margin="normal"
-            fullWidth
-          />
-          Spy ={JSON.stringify(account)}
-        </form>
-      </CardContent>
-      <div>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          className={classes.submit}
-        >
-          Register
-        </Button>
-      </div>
-      <div>
-        <Button
-          onClick={() => {
-            props.history.push("/login");
+        <Formik
+          onSubmit={(values, { setSubmitting }) => {
+            setSubmitting(true);
           }}
-          color="primary"
-          fullWidth
+          initialValues={{ username: "", password: "" }}
         >
-          Cancle
-        </Button>
-      </div>
+          {(props) => showForm(props)}
+        </Formik>
+      </CardContent>
     </Card>
   );
 }

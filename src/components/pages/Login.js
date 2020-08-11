@@ -8,7 +8,8 @@ import CardMedia from "@material-ui/core/CardMedia";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
-
+import * as loginAction from "../../actions/login.action";
+import { useDispatch } from "react-redux";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
@@ -24,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
 export default function Login(props) {
   const [account, setAccount] = useState({ username: "", password: "" });
   const classes = useStyles();
-
+  const dispatch = useDispatch();
   const HanderChange = (e) => {
     setAccount({ ...account, [e.target.name]: e.target.value });
   };
@@ -40,7 +41,15 @@ export default function Login(props) {
         <Typography gutterBottom variant="h5" component="h2">
           Login
         </Typography>
-        <form className={classes.root} noValidate autoComplete="off">
+        <form
+          className={classes.root}
+          noValidate
+          autoComplete="off"
+          onSubmit={(e) => {
+            e.preventDefault();
+            dispatch(loginAction.login({ ...account, ...props }));
+          }}
+        >
           <TextField
             id="outlined-basic"
             label="username"
@@ -61,31 +70,30 @@ export default function Login(props) {
             margin="normal"
             fullWidth
           />
-          Spy ={JSON.stringify(account)}
+          <div>
+            <Button
+              type="submit"
+              variant="contained"
+              color="primary"
+              fullWidth
+              className={classes.submit}
+            >
+              Login
+            </Button>
+          </div>
+          <div>
+            <Button
+              onClick={() => {
+                props.history.push("/register");
+              }}
+              color="primary"
+              fullWidth
+            >
+              Register
+            </Button>
+          </div>
         </form>
       </CardContent>
-      <div>
-        <Button
-          type="submit"
-          variant="contained"
-          color="primary"
-          fullWidth
-          className={classes.submit}
-        >
-          Login
-        </Button>
-      </div>
-      <div>
-        <Button
-          onClick={() => {
-            props.history.push("/register");
-          }}
-          color="primary"
-          fullWidth
-        >
-          Register
-        </Button>
-      </div>
     </Card>
   );
 }

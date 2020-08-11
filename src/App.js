@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Button, Container } from "@material-ui/core";
 import Header from "./components/fragments/Header";
 import Menu from "./components/fragments/Menu";
@@ -13,6 +13,10 @@ import {
   Redirect,
   Switch,
 } from "react-router-dom";
+import Stock from "./components/pages/Stock";
+import StockCreate from "./components/pages/StockCreate";
+import StockEdit from "./components/pages/StockEdit";
+import { useSelector } from "react-redux";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -35,20 +39,29 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
   const classes = useStyles();
-  const [openDrawer, setOpenDrawer] = React.useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   const handleDrawer = () => {
     setOpenDrawer(!openDrawer);
   };
 
+  const loginReducer = useSelector(({ loginReducer }) => loginReducer);
+
   return (
     <Router>
-      <Header handleDrawerOpen={handleDrawer} open={openDrawer} />
-      <Menu open={openDrawer} handleDrawerClose={handleDrawer} />
+      {loginReducer.result && (
+        <Header handleDrawerOpen={handleDrawer} open={openDrawer} />
+      )}
+      {loginReducer.result && (
+        <Menu open={openDrawer} handleDrawerClose={handleDrawer} />
+      )}
       <Container className={classes.content}>
         <Switch>
           <Route path="/login" component={Login} />
           <Route path="/register" component={Register} />
+          <Route path="/stock" component={Stock} />
+          <Route path="/stockCreate" component={StockCreate} />
+          <Route path="/stockEdit/:id" component={StockEdit} />
           <Route
             exact={true}
             path="/"
