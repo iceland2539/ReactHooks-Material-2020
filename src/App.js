@@ -35,20 +35,16 @@ const useStyles = makeStyles((theme) => ({
 
 export default function App() {
   const classes = useStyles();
-  const [openDrawer, setOpenDrawer] = React.useState(true);
+  const [openDrawer, setOpenDrawer] = React.useState(false);
 
-  const handleDrawerClose = () => {
-    setOpenDrawer(!openDrawer);
-  };
-
-  const handleDrawerOpen = () => {
+  const handleDrawer = () => {
     setOpenDrawer(!openDrawer);
   };
 
   return (
     <Router>
-      <Header handleDrawerOpen={handleDrawerOpen} open={openDrawer} />
-      <Menu open={openDrawer} handleDrawerClose={handleDrawerClose} />
+      <Header handleDrawerOpen={handleDrawer} open={openDrawer} />
+      <Menu open={openDrawer} handleDrawerClose={handleDrawer} />
       <Container className={classes.content}>
         <Switch>
           <Route path="/login" component={Login} />
