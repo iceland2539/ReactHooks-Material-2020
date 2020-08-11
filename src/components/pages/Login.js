@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { makeStyles, ThemeProvider } from "@material-ui/core/styles";
 import Card from "@material-ui/core/Card";
 import CardActionArea from "@material-ui/core/CardActionArea";
@@ -22,7 +22,12 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function Login(props) {
+  const [account, setAccount] = useState({ username: "", password: "" });
   const classes = useStyles();
+
+  const HanderChange = (e) => {
+    setAccount({ ...account, [e.target.name]: e.target.value });
+  };
 
   return (
     <Card className={classes.root}>
@@ -42,6 +47,8 @@ export default function Login(props) {
             variant="outlined"
             name="username"
             margin="normal"
+            value={account.username}
+            onChange={HanderChange}
             fullWidth
           />
           <TextField
@@ -49,9 +56,12 @@ export default function Login(props) {
             label="password"
             variant="outlined"
             name="password"
+            value={account.password}
+            onChange={HanderChange}
             margin="normal"
             fullWidth
           />
+          Spy ={JSON.stringify(account)}
         </form>
       </CardContent>
       <div>
