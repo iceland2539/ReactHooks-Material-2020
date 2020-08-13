@@ -5,11 +5,12 @@ import CardActionArea from "@material-ui/core/CardActionArea";
 import CardActions from "@material-ui/core/CardActions";
 import CardContent from "@material-ui/core/CardContent";
 import CardMedia from "@material-ui/core/CardMedia";
+import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
 import Typography from "@material-ui/core/Typography";
 import TextField from "@material-ui/core/TextField";
 import * as loginAction from "../../actions/login.action";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 const useStyles = makeStyles((theme) => ({
   root: {
     maxWidth: 345,
@@ -26,6 +27,7 @@ export default function Login(props) {
   const [account, setAccount] = useState({ username: "", password: "" });
   const classes = useStyles();
   const dispatch = useDispatch();
+  const loginReducer = useSelector(({ loginReducer }) => loginReducer);
   const HanderChange = (e) => {
     setAccount({ ...account, [e.target.name]: e.target.value });
   };
@@ -65,11 +67,15 @@ export default function Login(props) {
             label="password"
             variant="outlined"
             name="password"
+            type="password"
             value={account.password}
             onChange={HanderChange}
             margin="normal"
             fullWidth
           />
+          {loginReducer.error && (
+            <Alert severity="error">{loginReducer.result}</Alert>
+          )}
           <div>
             <Button
               type="submit"

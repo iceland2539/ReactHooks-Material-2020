@@ -3,7 +3,9 @@ import {
   LOGIN_SUCCESS,
   LOGIN_FAILED,
   LOGOUT,
+  server,
 } from "../Constants";
+import { httpClient } from "../utils/HttpClient";
 
 export const setStateToFetching = () => ({
   type: LOGIN_FETCHING,
@@ -23,13 +25,24 @@ export const setStateToLogout = () => ({
   type: LOGOUT,
 });
 
-export const login = ({ usename, password, history }) => {
-  return (dispatch) => {
+export const login = ({ username, password, history }) => {
+  return async (dispatch) => {
     dispatch(setStateToFetching());
-    setTimeout(() => {
-      dispatch(setStateToSuccess("ok"));
+    const result = await httpClient.post(server.LOGIN_URL, {
+      username,
+      password,
+    });
+    if (result.data.result == "ok") {
+      dispatch(setStateToSuccess(result.data.result));
       history.push("./stock");
-    }, 2000);
+    } else {
+      dispatch(setStateToFailed(result.data.message));
+    }
+  };
+};
+export const setSuccess = () => {
+  return (dispatch) => {
+    dispatch(setStateToSuccess("ok"));
   };
 };
 
@@ -37,5 +50,11 @@ export const logout = ({ history }) => {
   return (dispatch) => {
     dispatch(setStateToLogout());
     history.push("./login");
+  };
+};
+
+export const hasError = (payload) => {
+  return (dispatch) => {
+    dispatch(setStateToFailed(payload));
   };
 };

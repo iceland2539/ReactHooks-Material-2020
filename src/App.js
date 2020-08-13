@@ -49,10 +49,10 @@ export default function App() {
 
   return (
     <Router>
-      {loginReducer.result && (
+      {loginReducer.result && !loginReducer.error && (
         <Header handleDrawerOpen={handleDrawer} open={openDrawer} />
       )}
-      {loginReducer.result && (
+      {loginReducer.result && !loginReducer.error && (
         <Menu open={openDrawer} handleDrawerClose={handleDrawer} />
       )}
       <Container className={classes.content}>
