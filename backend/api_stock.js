@@ -9,7 +9,7 @@ const fs = require("fs-extra");
 const Op = Sequelize.Op;
 
 // Upload Image
-uploadImage = async (files, doc) => {
+let uploadImage = async (files, doc) => {
   if (files.image != null) {
     var fileExtention = files.image.name.split(".")[1];
     doc.image = `${doc.id}.${fileExtention}`;
@@ -44,7 +44,7 @@ router.post("/product", async (req, res) => {
       result = await uploadImage(files, result);
       res.json({
         result: constants.kResultOk,
-        message: JSON.stringify(result)
+        message: JSON.stringify(result),
       });
     });
   } catch (error) {
@@ -62,7 +62,7 @@ router.put("/product", async (req, res) => {
 
       res.json({
         result: constants.kResultOk,
-        message: JSON.stringify(result)
+        message: JSON.stringify(result),
       });
     });
   } catch (err) {
@@ -86,20 +86,21 @@ router.delete("/product/:id", async (req, res) => {
 });
 
 // Get Product by Id
-router.get("/product/:id", async (req, res)=>{
-  let result = await product.findOne({where:{id: req.params.id}})
-  if (result){
+router.get("/product/:id", async (req, res) => {
+  let result = await product.findOne({ where: { id: req.params.id } });
+  if (result) {
     res.json(result);
-  }else{
+  } else {
     res.json({});
-  }  
-})
-
+  }
+});
 
 // Get Products by Keyword
 router.get("/product/keyword/:keyword", async (req, res) => {
   const { keyword } = req.params;
-  let result = await product.findAll({ where: { name: {[Op.like]: `%${keyword}%`} } });
+  let result = await product.findAll({
+    where: { name: { [Op.like]: `%${keyword}%` } },
+  });
   res.json(result);
 });
 
